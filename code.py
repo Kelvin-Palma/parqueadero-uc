@@ -1,12 +1,17 @@
 vehiculos = []
 
 cupos = 30
+contador = 0
+recaudo = 0
+horas_totales = 0
+estudiantes = 0
+docentes = 0
+visitantes = 0
 
-
-for i in range(cupos):
-    print("\nVehículo", i + 1)
+while contador < cupos:
+    print("\nVehículo", contador + 1)
     print("Ingrese los datos del vehículo:")
-    print("Si no hay mas vehiculos ingrese la palabra 'Salir'.")
+    print("Si no hay más vehículos, ingrese la palabra 'Salir'.")
 
     placa = input("Placa: ").strip().upper()
     if placa == "SALIR":
@@ -28,17 +33,35 @@ for i in range(cupos):
         print("Las horas de permanencia no pueden ser negativas.")
         continue
 
-    if tipo != "E" and tipo != "D" and tipo != "V":
+    if tipo == "E":
+        estudiantes += 1
+        tarifa = 0 if permanencia <= 2 else (permanencia - 2) * 800
+    elif tipo == "D":
+        docentes += 1
+        tarifa = permanencia * 500
+    else:
+        if tipo != "V":
+            print("Tipo inválido. Se toma como visitante.")
         tipo = "V"
+        visitantes += 1
+        tarifa = 1500 if permanencia <= 1 else 1500 + (permanencia - 1) * 1200
 
-    # Guardar el vehículo
-    vehiculo = {
+    if hora > 19 or hora < 6:
+        tarifa *= 0.90
+
+    tarifa = round(tarifa, 2)
+    vehiculos.append({
         "placa": placa,
         "tipo": tipo,
         "hora": hora,
         "permanencia": permanencia
-    }
-
-    vehiculos.append(vehiculo)
+    })
+    recaudo += tarifa
+    horas_totales += permanencia
+    contador += 1
 
     print("Vehículo registrado correctamente.")
+    print("Tarifa:", tarifa, "COP")
+
+    if contador == cupos:
+        print("\nPARQUEADERO LLENO")
