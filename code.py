@@ -1,5 +1,3 @@
-vehiculos = []
-
 cupos = 30
 contador = 0
 recaudo = 0
@@ -18,12 +16,21 @@ while contador < cupos:
         break
     tipo = input("Tipo de usuario (E=Estudiante, D=Docente, V=Visitante): ").strip().upper()
 
-    try:
-        hora = int(input("Hora de entrada (0 a 23): "))
-        permanencia = float(input("Horas de permanencia: "))
-    except ValueError:
+    entrada_hora = input("Hora de entrada (0 a 23): ")
+
+    if not entrada_hora.isdigit():
         print("Dato inválido. Se rechaza el registro.")
         continue
+
+    hora = int(entrada_hora)
+
+    entrada_permanencia = input("Horas de permanencia: ")
+
+    if not entrada_permanencia.replace(".", "", 1).isdigit():
+        print("Dato inválido. Se rechaza el registro.")
+        continue
+
+    permanencia = float(entrada_permanencia)
 
     if hora < 0 or hora > 23:
         print("Hora fuera de los límites. Vehículo no contado.")
@@ -49,19 +56,32 @@ while contador < cupos:
     if hora > 19 or hora < 6:
         tarifa *= 0.90
 
-    tarifa = round(tarifa, 2)
-    vehiculos.append({
-        "placa": placa,
-        "tipo": tipo,
-        "hora": hora,
-        "permanencia": permanencia
-    })
     recaudo += tarifa
     horas_totales += permanencia
     contador += 1
 
     print("Vehículo registrado correctamente.")
-    print("Tarifa:", tarifa, "COP")
+    print("\nTarifa:", tarifa, "COP")
 
     if contador == cupos:
         print("\nPARQUEADERO LLENO")
+
+print("\n==RESUMEN DEL DIA==")
+
+print("Vehículos registrados:", contador)
+print("Ocupación:", round((contador / 30) * 100, 2), "%")
+print("Recaudo total:", round(recaudo, 2), "COP")
+
+print("Estudiantes:", estudiantes)
+print("Docentes:", docentes)
+print("Visitantes:", visitantes)
+
+if contador > 0:
+    promedio = horas_totales / contador
+else:
+    promedio = 0
+
+print("Promedio de permanencia:", round(promedio, 2), "horas")
+
+
+
